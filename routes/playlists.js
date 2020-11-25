@@ -7,7 +7,7 @@ router.get("/", (req, res) =>{
 
 router.get("/BPM/:BPM", (req, res) =>{
     let BPM = req.params.BPM;
-    console.log(BPM);
+    res.send(BPM);
 })
 
 router.get("/Al", (req, res) =>{
