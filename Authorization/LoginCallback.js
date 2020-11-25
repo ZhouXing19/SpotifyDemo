@@ -1,5 +1,6 @@
 var request = require('request'); // "Request" library
 const fs = require('fs');
+const CONSTANTS = require('../util/Constants.js')
 
 var updateAttributeEnv = function(envPath, attrName, newVal){
     var dataArray = fs.readFileSync(envPath,'utf8').split('\n');
@@ -23,7 +24,7 @@ module.exports = {
         // 2. Have your application request refresh and access tokens; Spotify returns access and refresh tokens
     
         var authOptions = {
-            url: 'https://accounts.spotify.com/api/token',
+            url: CONSTANTS.API_ENDPOINTS.authorization_endpoint,
             form: {
                 code: userCode,
                 redirect_uri: process.env.REDIRECT_URI,
@@ -45,7 +46,7 @@ module.exports = {
     
                 // 3. Use the access token to access the Spotify Web API; Spotify returns requested data
                 var options = {
-                    url: 'https://api.spotify.com/v1/me',
+                    url: CONSTANTS.API_ENDPOINTS.profile_endpoint,
                     headers: { 'Authorization': 'Bearer ' + access_token },
                     json: true
                     };
@@ -57,7 +58,9 @@ module.exports = {
                     <br/>
                     Email: <b> ${body.email}</b>
                     <br/>
-                    AccessCode: ${access_token}`)
+                    AccessCode: ${access_token}
+                    <br/>
+                    <a href="/getPopular"> Get popular songs </a>`)
     
                 });
     
