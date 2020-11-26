@@ -46,7 +46,6 @@ var getPopularArtists = async (req, res) => {
         res.send(artistNameIdMap);
     })
 
-    
 
 
 }
