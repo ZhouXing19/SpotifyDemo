@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../util/Constants');
-var request = require('request'); // "Request" library
+const got = require('got');
+const request = require('request');
 require('dotenv').config()
 const access_token = process.env.ACCESS_TOKEN;
 
@@ -9,11 +10,28 @@ const fields = 'items(track)';
 const playlistId = CONSTANTS.PLATLISTS_ID.global_top_50;
 const subpath = playlistId + '/tracks?market=' + market + '&fields=' + fields;
 
+let artistNameIdMap = {};
+let trackNameIdMap = {};
 
 
-var getArtistNameIdMap = (body, artistNameIdMap) => {
+
+var getTrackNameIdMap = (body) => {
+    // console.log("getTrackNameIdMap");
+    for (let item of body.items) {
+        var uris = item.track.uri.split(":");
+        var id = uris[uris.length-1];
+        var name = item.track.name;
+        trackNameIdMap[name] = {id};
+    }
+
+    return trackNameIdMap;
+}
+
+var getArtistNameIdMap = (body) => {
+    
     for (let item of body.items) {
         var artists = item.track.artists;
+        
         for (let artist of artists) {
             var artistName = artist.name;
             var artistId = artist.id;
@@ -30,9 +48,10 @@ var getArtistNameIdMap = (body, artistNameIdMap) => {
     return artistNameIdMap;
 }
 
-var getPopularArtists = async (req, res) => {
+var getPopular = () => new Promise((resolve, reject) => {
+
     //https://nodejs.org/api/http.html#http_http_request_options_callback
-    var options = {
+    const options = {
         url: CONSTANTS.API_ENDPOINTS.playlist_endpoint + subpath,
         headers: { 'Authorization': 'Bearer ' + access_token,
                     'Accept': 'application/json',
@@ -40,18 +59,37 @@ var getPopularArtists = async (req, res) => {
         json: true
     }
     
-    request.get(options, function(error, response, body) {
-        var artistNameIdMap = {};
-        artistNameIdMap = getArtistNameIdMap(body, artistNameIdMap);
-        res.send(artistNameIdMap);
-    })
+    request.get(options, (error, response, body) => {
+        if (error) {
+            reject(error);
+        } else if (response.statusCode === 200) {
+            resolve([getTrackNameIdMap(body),
+                    getArtistNameIdMap(body)]);
+        } else {
+            reject("get popular error");
+        }
+    });
+});
 
+// async function getPopular() {
+//     const options = {
+//         headers: { 'Authorization': 'Bearer ' + access_token,
+//                     'Accept': 'application/json',
+//                     'Content-Type': 'application/json'},
+//     };
+//     const url = CONSTANTS.API_ENDPOINTS.playlist_endpoint + subpath;
+//     let results = await got(url, options).json();
+//     // update local cache object
     
+//     artistNameIdMap = getArtistNameIdMap(results);
+//     //console.log(artistNameIdMap);
+//     trackNameIdMap = getTrackNameIdMap(results);
+//     //console.log(trackNameIdMap);
+//     return [trackNameIdMap,artistNameIdMap];
+// };
 
-
-}
 
 
 module.exports = {
-    GetPopularArtists: getPopularArtists
+    GetPopular: getPopular,
 }

@@ -48,8 +48,6 @@ app.get('/', (req, res) => {
 
 app.get('/login', Login.login);
 
-app.get('/getPopular', GetPopular.GetPopularArtists);
-
 app.get('/callback', LoginCallback.loginCallBack);
 
 app.use('/recommendations', Recommendations);
