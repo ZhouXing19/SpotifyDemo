@@ -8,26 +8,55 @@ var pickRandom = (lst) => {
 
     return [randomKey, content];
 }
-var getSeed = async () => {
-    const popular = await getPopular.GetPopular();
+// var getSeed = async () => {
+//     const popular = await getPopular.GetPopular();
 
-    const trackMap = popular[0];
-    const artistMap = popular[1];
-    const randomArtist = pickRandom(artistMap);
-    const randomTrack = pickRandom(trackMap);
+//     const trackMap = popular[0];
+//     const artistMap = popular[1];
+//     const randomArtist = pickRandom(artistMap);
+//     const randomTrack = pickRandom(trackMap);
+
+
+//     return {artist: {
+//                 name: randomArtist[0],
+//                 ...randomArtist[1]
+//                 }, 
+//             track:{
+//                 name: randomTrack[0],
+//                 ... randomTrack[1]
+//                 }
+
+//             };
+// }
+var results = {};
+
+var getSeed = async () => {
+    await getPopular.GetPopular().then(popular => {
+    results = popular;
     
 
-    return {artist: {
-                name: randomArtist[0],
-                ...randomArtist[1]
-                }, 
-            track:{
-                name: randomTrack[0],
-                ... randomTrack[1]
-                }
+}).catch(err => {
+    console.log(err);
+});
 
-            };
-}
+const trackMap = results[0];
+const artistMap = results[1];
+const randomArtist = pickRandom(artistMap);
+const randomTrack = pickRandom(trackMap);
+
+
+return {artist: {
+        name: randomArtist[0],
+        ...randomArtist[1]
+        }, 
+    track:{
+        name: randomTrack[0],
+        ... randomTrack[1]
+        }
+
+    };
+
+};
 
 module.exports = {
     getSeed: getSeed

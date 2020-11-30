@@ -41,7 +41,7 @@ var getPlaylistsByTargetBPM = (BPM, seed) => new Promise((resolve, reject) =>{
         json: true
     }
 
-    console.log("byTargetBPM", seed);
+    //console.log("byTargetBPM", seed);
 
     request.get(options, (err, response, body) => {
         if (err) {

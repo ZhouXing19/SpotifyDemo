@@ -48,45 +48,45 @@ var getArtistNameIdMap = (body) => {
     return artistNameIdMap;
 }
 
-var getPopular = () => new Promise((resolve, reject) => {
+// var getPopular = () => new Promise((resolve, reject) => {
 
-    //https://nodejs.org/api/http.html#http_http_request_options_callback
-    const options = {
-        url: CONSTANTS.API_ENDPOINTS.playlist_endpoint + subpath,
-        headers: { 'Authorization': 'Bearer ' + access_token,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'},
-        json: true
-    }
-    
-    request.get(options, (error, response, body) => {
-        if (error) {
-            reject(error);
-        } else if (response.statusCode === 200) {
-            resolve([getTrackNameIdMap(body),
-                    getArtistNameIdMap(body)]);
-        } else {
-            reject("get popular error");
-        }
-    });
-});
-
-// async function getPopular() {
+//     //https://nodejs.org/api/http.html#http_http_request_options_callback
 //     const options = {
+//         url: CONSTANTS.API_ENDPOINTS.playlist_endpoint + subpath,
 //         headers: { 'Authorization': 'Bearer ' + access_token,
 //                     'Accept': 'application/json',
 //                     'Content-Type': 'application/json'},
-//     };
-//     const url = CONSTANTS.API_ENDPOINTS.playlist_endpoint + subpath;
-//     let results = await got(url, options).json();
-//     // update local cache object
+//         json: true
+//     }
     
-//     artistNameIdMap = getArtistNameIdMap(results);
-//     //console.log(artistNameIdMap);
-//     trackNameIdMap = getTrackNameIdMap(results);
-//     //console.log(trackNameIdMap);
-//     return [trackNameIdMap,artistNameIdMap];
-// };
+//     request.get(options, (error, response, body) => {
+//         if (error) {
+//             reject(error);
+//         } else if (response.statusCode === 200) {
+//             resolve([getTrackNameIdMap(body),
+//                     getArtistNameIdMap(body)]);
+//         } else {
+//             reject("get popular error");
+//         }
+//     });
+// });
+
+async function getPopular() {
+    const options = {
+        headers: { 'Authorization': 'Bearer ' + access_token,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'},
+    };
+    const url = CONSTANTS.API_ENDPOINTS.playlist_endpoint + subpath;
+    let results = await got(url, options).json();
+    // update local cache object
+    
+    artistNameIdMap = getArtistNameIdMap(results);
+    //console.log(artistNameIdMap);
+    trackNameIdMap = getTrackNameIdMap(results);
+    //console.log(trackNameIdMap);
+    return [trackNameIdMap,artistNameIdMap];
+};
 
 
 
