@@ -21,7 +21,8 @@ var getTrack = (body) => {
 }
 
 
-async function getPlaylistsByTargetBPM(BPM, seed){
+async function getPlaylistsByTarget(params, seed){
+    console.log(params);
     const artistId = seed.artist.id;
     const trackId = seed.track.id;
     const seedGenre = "work-out";
@@ -32,7 +33,13 @@ async function getPlaylistsByTargetBPM(BPM, seed){
                         + '&seed_artists=' + artistId
                         + '&seed_tracks' + trackId
                         + '&seed_genres=' + seedGenre
-                        + '&target_tempo=' + BPM;
+                        + '&target_tempo=' + params.tempo;
+                        + '&target_duration_ms=' + params.duration
+                        + '&target_energy=' + params.energy
+                        + '&target_liveness=' + params.liveness
+                        + '&target_loudness=' + params.loudness
+                        + '&min_popularity=' + params.min_popularity
+                        + '&target_speechiness=' + params.speechiness;
 
     const url =  CONSTANTS.API_ENDPOINTS.recommendations_endpoint + subpath;
     const options = {
@@ -46,5 +53,5 @@ async function getPlaylistsByTargetBPM(BPM, seed){
 }
 
 module.exports ={
-    GetPlaylistsByTargetBPM: getPlaylistsByTargetBPM
+    GetPlaylistsByTarget: getPlaylistsByTarget
 }

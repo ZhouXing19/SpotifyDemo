@@ -48,28 +48,6 @@ var getArtistNameIdMap = (body) => {
     return artistNameIdMap;
 }
 
-// var getPopular = () => new Promise((resolve, reject) => {
-
-//     //https://nodejs.org/api/http.html#http_http_request_options_callback
-//     const options = {
-//         url: CONSTANTS.API_ENDPOINTS.playlist_endpoint + subpath,
-//         headers: { 'Authorization': 'Bearer ' + access_token,
-//                     'Accept': 'application/json',
-//                     'Content-Type': 'application/json'},
-//         json: true
-//     }
-    
-//     request.get(options, (error, response, body) => {
-//         if (error) {
-//             reject(error);
-//         } else if (response.statusCode === 200) {
-//             resolve([getTrackNameIdMap(body),
-//                     getArtistNameIdMap(body)]);
-//         } else {
-//             reject("get popular error");
-//         }
-//     });
-// });
 
 async function getPopular() {
     const options = {

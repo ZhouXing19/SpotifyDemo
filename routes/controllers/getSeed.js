@@ -8,26 +8,7 @@ var pickRandom = (lst) => {
 
     return [randomKey, content];
 }
-// var getSeed = async () => {
-//     const popular = await getPopular.GetPopular();
 
-//     const trackMap = popular[0];
-//     const artistMap = popular[1];
-//     const randomArtist = pickRandom(artistMap);
-//     const randomTrack = pickRandom(trackMap);
-
-
-//     return {artist: {
-//                 name: randomArtist[0],
-//                 ...randomArtist[1]
-//                 }, 
-//             track:{
-//                 name: randomTrack[0],
-//                 ... randomTrack[1]
-//                 }
-
-//             };
-// }
 var results = {};
 
 var getSeed = async () => {
@@ -49,7 +30,7 @@ return {artist: {
         name: randomArtist[0],
         ...randomArtist[1]
         }, 
-    track:{
+        track:{
         name: randomTrack[0],
         ... randomTrack[1]
         }

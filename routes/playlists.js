@@ -3,22 +3,42 @@ const router = express.Router();
 const got = require('got');
 const getSeed = require('./controllers/getSeed');
 const byTargetBPM = require('./controllers/byTargetBPM');
+const byTarget = require('./controllers/byTargetFeature');
 
-router.get("/", (req, res) =>{
-    res.send("hello world");
-})
+const fields = ["tempo", "duration", "energy", "liveness", "loudness", "popularity", "speechiness"];
+var BPM = 120;
+var duration = 240000;
+var energy = 0.5;
+var liveness = 0;
+var loudness = 0;
+var minPopularity = 100;
+var speechiness = 0;
 
-router.get("/BPM/:BPM", async (req, res) =>{
+router.get("/", async (req, res) =>{
+
     try {
         const seed = await getSeed.getSeed();
 
         console.log("playlists", seed);
 
-        let BPM = req.params.BPM;
+
+        const params = {
+            tempo: req.query.tempo === undefined ? BPM : req.query.tempo,
+            duration: req.query.duration === undefined ? duration : req.query.duration,
+            energy: req.query.energy === undefined ? energy : req.query.energy,
+            liveness: req.query.liveness === undefined ? liveness : req.query.liveness,
+            loudness: req.query.loudness === undefined ? loudness : req.query.loudness,
+            minPopularity: req.query.minPopularity === undefined ? minPopularity : req.query.minPopularity,
+            speechiness: req.query.speechiness === undefined ? speechiness : req.query.speechiness,  
+
+        }
+
+
+        console.log("duration: ", req.query.energy);
 
         let pl1 = {}
         
-        await byTargetBPM.GetPlaylistsByTargetBPM(BPM, seed)
+        await byTarget.GetPlaylistsByTarget(params, seed)
                             .then((playlists) => {
                                 pl1 = playlists;
                             }).catch(err => {
@@ -29,11 +49,10 @@ router.get("/BPM/:BPM", async (req, res) =>{
     } catch(err) {
         res.send(err);
     }
-})
 
-router.get("/Al", (req, res) =>{
 
 })
+
 
 
 module.exports = router;

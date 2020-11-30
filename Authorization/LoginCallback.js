@@ -1,5 +1,6 @@
 var request = require('request'); // "Request" library
 const fs = require('fs');
+const got = require('got');
 const CONSTANTS = require('../util/Constants.js')
 
 var updateAttributeEnv = function(envPath, attrName, newVal){
@@ -36,33 +37,46 @@ module.exports = {
             json: true
         };
     
-        request.post(authOptions, function(error, response, body){
+        request.post(authOptions, async function(error, response, body){
             if (!error && response.statusCode === 200) {
                 var access_token = body.access_token,
                     refresh_token = body.refresh_token;
     
                 updateAttributeEnv('./.env', 'ACCESS_TOKEN', String(access_token));
                 updateAttributeEnv('./.env', 'REFRESH_TOKEN', String(refresh_token));
+                const url =  CONSTANTS.API_ENDPOINTS.profile_endpoint;
     
                 // 3. Use the access token to access the Spotify Web API; Spotify returns requested data
                 var options = {
-                    url: CONSTANTS.API_ENDPOINTS.profile_endpoint,
                     headers: { 'Authorization': 'Bearer ' + access_token },
-                    json: true
                     };
                 
-                request.get(options, function(error, response, body) {
-                    res.send(`
+                let results = await got(url, options).json();
+                res.send(`
                     <h1> Welcome Back! </h1>
-                    Username: <b> ${body.display_name}</b> 
+                    Username: <b> ${results.display_name}</b> 
                     <br/>
-                    Email: <b> ${body.email}</b>
+                    Email: <b> ${results.email}</b>
                     <br/>
                     AccessCode: ${access_token}
                     <br/>
-                    <a href="/getPopular"> Get popular songs </a>`)
-    
-                });
+                    
+                    <br/>
+                    <br/>
+                    <br/>
+
+                    <form action="/playlists" method="GET">
+                    tempo: <input type="text" name="tempo" /> <br/>
+                    duration: <input type="text" name="duration"/> <br/>
+                    energy: <input type="text" name="energy"/> <br/>
+                    liveness: <input type="text" name="liveness"/> <br/>
+                    loudness: <input type="text" name="loudness"/> <br/>
+                    minPopularity: <input type="text" name="minPopularity"/> <br/>
+                    speechiness: <input type="text" name="speechiness"/> <br/>
+                    <input type="submit" value="Get by target value"/>
+                    
+                    </form>
+`)
     
             }
     
