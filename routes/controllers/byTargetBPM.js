@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../util/Constants');
 var request = require('request'); // "Request" library
+const got = require('got');
 require('dotenv').config()
 const access_token = process.env.ACCESS_TOKEN;
 
@@ -19,8 +20,10 @@ var getTrack = (body) => {
     return tracksNameIdLst;
 }
 
-var getPlaylistsByTargetBPM = (BPM, seed) => new Promise((resolve, reject) =>{
 
+
+
+async function getPlaylistsByTargetBPM(BPM, seed){
     const artistId = seed.artist.id;
     const trackId = seed.track.id;
     const seedGenre = "work-out";
@@ -33,29 +36,16 @@ var getPlaylistsByTargetBPM = (BPM, seed) => new Promise((resolve, reject) =>{
                         + '&seed_genres=' + seedGenre
                         + '&target_tempo=' + BPM;
 
+    const url =  CONSTANTS.API_ENDPOINTS.recommendations_endpoint + subpath;
     const options = {
-        url: CONSTANTS.API_ENDPOINTS.recommendations_endpoint + subpath,
         headers: { 'Authorization': 'Bearer ' + access_token,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'},
-        json: true
     }
 
-    //console.log("byTargetBPM", seed);
-
-    request.get(options, (err, response, body) => {
-        if (err) {
-            reject(err);
-        } else if (response.statusCode === 200){
-            resolve(getTrack(body));
-        } else {
-            reject("get byTargetBPM error");
-        }
-        
-    });
-
-
-});
+    let results = await got(url, options).json();
+    return getTrack(results);
+}
 
 module.exports ={
     GetPlaylistsByTargetBPM: getPlaylistsByTargetBPM
