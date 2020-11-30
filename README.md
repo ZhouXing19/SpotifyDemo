@@ -36,8 +36,9 @@ The API will return playlist in JSON, with `tracks`, `albums`, `artists` listed.
 
 ## Usage
 
-1. In your browser, go to `http://localhost:3007/`, and authorize this app.
-2. (Current Version, will be updated) After authorization, in `http://localhost:3007/callback?code={YOUR_ACCESS_CODE}` page, click on `Get popular`
+0. `npm run devStart` to start the server.
+1. In your browser, go to [http://localhost:3007/](http://localhost:3007/), and authorize this app.
+2. (Current Version, will be updated) After authorization, in `http://localhost:3007/callback?code={YOUR_ACCESS_CODE}` page, fill in the input edit-text field for your target paramter. E.g., for recommendation playlist based on BPM 100, type `100` in the `tempo` field, and click `submit`.
 
 ## References:
 - **[Spotify Authorization Flows](https://developer.spotify.com/documentation/general/guides/authorization-guide/)** 
